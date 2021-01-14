@@ -218,8 +218,8 @@ int main()
 		start1 = clock();
 		int* result1 = new int[expansion - 1];
 		int* result2 = new int[expansion - 1];
-		cout << endl << "След первого вектора:" << trace_polynomial(_vector_1, _generator, expansion-1) << endl;
-		cout << endl << "След второго вектора:" << trace_polynomial(_vector_2, _generator, expansion-1) << endl;
+		cout << endl << "След первого вектора:" << trace_polynomial(_vector_1, _generator, expansion) << endl;
+		cout << endl << "След второго вектора:" << trace_polynomial(_vector_2, _generator, expansion) << endl;
 		finish1 = clock();
 		d1 = (double)(finish1 - start1) / CLOCKS_PER_SEC;
 		cout << "Время работы операции вычисления следа элемента : " << d1 << endl;
