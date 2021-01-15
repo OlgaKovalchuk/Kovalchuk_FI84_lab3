@@ -65,6 +65,49 @@ int main()
 	}
 	cout << endl;
 	//cout << revers_output(_generator, expansion);
+	/*cout << "Сдвигаем биты первого вектора на 2 ячейки влево:" << endl;
+	int* shift_vec1 = LongShiftBitsToHigh(_vector_1, 2,expansion);
+	cout << "Первый способ" << endl;
+	for (int i = 0; i < expansion + 2; i++)
+	{
+		cout << shift_vec1[i] << "  ";
+	}
+	cout << endl;
+	cout << "Второй способ" << endl;
+	int* copyA = new int[expansion];
+	element_null(copyA, expansion);
+	for (int i = 0; i < expansion; i++)
+	{
+		copyA[i] = _vector_1[expansion - i - 1];
+	}
+	cout << "Первый вектор:" << endl;
+	for (int i = 0; i < expansion; i++)
+	{
+		cout << copyA[i] << "  ";
+	}
+	cout << endl;
+	int* Answer1 = new int[2 * expansion];
+	int shift=0;
+	for (int i = 0; i < 2 * expansion; i++)
+	{
+		Answer1[i] = 0;
+	}
+	Answer1 = LongShiftBitsToHigh(copyA, shift, expansion);
+	cout << "Результат сдвига первого вектора на " << shift << " позиций влево:" << endl;
+	for (int j = 0; j < expansion + shift; j++)
+	{
+		cout << Answer1[j] << "  ";
+	}
+	cout << endl;
+	cout << "Сумма первого вектора и вектора из 0 длины 2*" << expansion << ":" << endl;
+	int* Zeroes = new int[2 * expansion];
+	element_null(Zeroes, 2 * expansion);
+	int* Add = AddMod2(Zeroes, _vector_1, 2 * expansion, expansion);
+	for (int i = 0; i < 2*expansion; i++)
+	{
+		cout << Add[i] << "  ";
+	}
+	cout << endl;*/
 
 	cout << endl;
 	cout << "Какую операцию Вы хотите выполнить:" << endl;
@@ -123,6 +166,8 @@ int main()
 		int* result = new int[expansion - 1];
 		element_null(result, expansion);
 		cout << revers_output(add_vector(_vector_1, _vector_2, result, expansion), expansion) << endl;
+		//result = AddMod2(_vector_1, _vector_2, expansion, expansion);
+		//cout << revers_output(result, expansion) << endl;
 		finish1 = clock();
 		d1 = (double)(finish1 - start1) / CLOCKS_PER_SEC;
 		cout << "Время работы операции + : " << d1 << endl;
@@ -136,9 +181,17 @@ int main()
 		clock_t start1, finish1;
 		srand(time(NULL));
 		start1 = clock();
-		int* result = new int[expansion - 1];
+		int* result = new int[expansion];
 		element_null(result, expansion);
-		cout << revers_output(multiplicative_vector(_vector_1, _vector_2, _generator, result, expansion-1), expansion-1) << endl;
+		//cout << revers_output(multiplicative_vector(_vector_1, _vector_2, _generator, result, expansion-1), expansion-1) << endl;
+		result = MulVector(expansion, _vector_1, _vector_2, _generator);
+		cout << endl;
+		cout << "Результат умножения:" << endl;
+		for (int i = 0; i < expansion; i++)
+		{
+			cout << result[i] << "  ";
+		}
+		cout << endl;
 		finish1 = clock();
 		d1 = (double)(finish1 - start1) / CLOCKS_PER_SEC;
 		cout << "Время работы операции * : " << d1 << endl;
