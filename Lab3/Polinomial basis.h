@@ -5,6 +5,21 @@ using namespace std;
 
 #define POLINOMIAL_BASIS_H
 
+
+int Max(int a, int b)
+{
+	int c;
+	if (a > b)
+	{
+		c = a;
+	}
+	else {
+		c = b;
+	}
+	return c;
+}
+
+
 string revers_big_string(string str, int str_length)
 {
 	int temp, i, j;
@@ -103,7 +118,37 @@ int* add_vector(int* vector_1, int* vector_2, int* result, int size)
 	return result;
 }
 
-int* long_shift_digits_to_high(int* arrey, int max, int shiftBy)
+int* LongShiftBitsToHigh(int B[], int number_of_cells_shift, int b_length)
+{
+	int* NewB = new int[b_length + number_of_cells_shift];
+	/*for (int k = 0; k < b_length + number_of_cells_shift; k++)
+	{
+		NewB[k] = 0;
+	}*/
+	if (number_of_cells_shift == 0)
+	{
+		for (int i = 0; i < b_length; i++)
+		{
+			NewB[i] = B[i];
+		}
+		return NewB;
+	}
+	else
+	{
+		for (int i = 0; i < b_length; i++)
+		{
+			NewB[i] = B[i];
+		}
+		for (int k = b_length; k < b_length + number_of_cells_shift; k++)
+		{
+			NewB[k] = 0;
+		}
+	}
+	return NewB;
+}
+
+
+int* long_shift_digits_to_high(int* arrey, int max, int shiftBy) //Циклический сдвиг
 {
 	int* arrey1 = new int[shiftBy];
 	int j = 0;
@@ -178,6 +223,200 @@ int* multiplicative_vector(int* vector1, int* vector2, int* generator, int* resu
 	mod_generator(result1, generator, result, 2 * size + 1, size + 1);
 	delete[] result1;
 	return result;
+}
+
+int* AddMod2(int A[], int B[], int a_length, int b_length)
+{
+	int* Answer = new int[Max(a_length, b_length)];
+	for (int i = 0; i < Max(a_length, b_length); i++)
+	{
+		Answer[i] = 0;
+	}
+	if (a_length > b_length)
+	{
+		for (int i = 0; i < b_length; i++)
+		{
+			int temp = Answer[a_length-i-1]+A[a_length - 1 - i] + B[b_length - 1 - i];
+			if (temp%2==0)
+			{
+				Answer[a_length - i - 1] = 0;
+			}
+			else
+			{
+				Answer[a_length - i - 1] = temp;
+			}
+		}
+		for (int i = b_length; i<a_length; i++)
+		{
+			int temp = Answer[a_length - i - 1] + A[a_length - 1 - i];
+			if (temp % 2 == 0)
+			{
+				Answer[a_length - i - 1] = 0;
+			}
+			else
+			{
+				Answer[a_length - i - 1] = temp;
+			}
+		}
+	}
+	else if (a_length < b_length)
+	{
+		for (int i = 0; i < a_length; i++)
+		{
+			int temp = Answer[b_length - i - 1] + A[a_length - 1 - i] + B[b_length - 1 - i];
+			if (temp % 2 == 0)
+			{
+				Answer[b_length - i - 1] = 0;
+			}
+			else
+			{
+				Answer[b_length - i - 1] = temp;
+			}
+		}
+		for (int i = a_length; i < b_length; i++)
+		{
+			int temp = Answer[b_length - i - 1] + B[b_length - 1 - i];
+			if (temp % 2 == 0)
+			{
+				Answer[b_length - i - 1] = 0;
+			}
+			else
+			{
+				Answer[b_length - i - 1] = temp;
+			}
+		}
+	}
+	else if (a_length == b_length)
+	{
+		for (int i = 0; i < b_length; i++)
+		{
+			int temp = Answer[b_length - i - 1] + A[a_length - 1 - i]+ B[b_length - 1 - i];
+			if (temp % 2 == 0)
+			{
+				Answer[b_length - i - 1] = 0;
+			}
+			else
+			{
+				Answer[b_length - i - 1] = temp;
+			}
+		}
+	}
+	return Answer;
+}
+
+int* MulVector(int expansion, int A[], int B[], int Generator[])
+{
+	int* copyA = new int[expansion];
+	element_null(copyA, expansion);
+	for (int i = 0; i < expansion; i++)
+	{
+		copyA[i] = A[expansion - i-1];
+	}
+
+	int* copyB = new int[expansion];
+	element_null(copyB, expansion);
+	for (int i = 0; i < expansion; i++)
+	{
+		copyB[i] = B[expansion - i-1];
+	}
+
+
+	int* copyGen = new int[expansion];
+	element_null(copyGen, expansion);
+	for (int i = 0; i < expansion; i++)
+	{
+		copyGen[i] = Generator[expansion - i-1];
+	}
+
+	cout << "Первый вектор:" << endl;
+	for (int i = 0; i < expansion; i++)
+	{
+		cout << copyA[i] << "  ";
+	}
+	cout << endl;
+	cout << "Второй вектор:" << endl;
+	for (int i = 0; i < expansion; i++)
+	{
+		cout << copyB[i] << "  ";
+	}
+	cout << endl;
+	cout << "Генератор:" << endl;
+	for (int i = 0; i < expansion; i++)
+	{
+		cout << copyGen[i] << "  ";
+	}
+	cout << endl;
+	int* Answer = new int[2 * expansion];
+	int* Answer1 = new int[2 * expansion];
+	int* Answer2 = new int[2 * expansion];
+	int shift;
+	for (int i = 0; i < 2 * expansion; i++)
+	{
+		Answer[i] = 0;
+		Answer1[i] = 0;
+		Answer2[i] = 0;
+	}
+	for (int i = 0; i < expansion; i++)
+	{
+		if (copyB[i] == 1)
+		{
+			shift = i;
+			Answer1 = LongShiftBitsToHigh(copyA, shift, expansion);
+			cout << "Результат сдвига первого вектора на " << shift << " позиций влево:" << endl;
+			for (int j = 0; j < expansion + shift; j++)
+			{
+				cout << Answer1[j] << "  ";
+			}
+			cout << endl;
+			Answer2 = AddMod2(Answer, Answer1, 2 * expansion, expansion+shift);
+			cout << "Результат суммирования:" << endl;
+			for (int j = 0; j < 2 * expansion; j++)
+			{
+				cout << Answer2[j] << "  ";
+			}
+			copy_array(Answer, Answer2, 2 * expansion);
+			element_null(Answer2, 2 * expansion);
+			cout << endl;
+		}
+	}
+	string multi;
+	for (int i = 0; i < 2 * expansion; i++)
+	{
+		multi = multi + bin_to_string(Answer[i]);
+	}
+	while (multi.at(0) == '0')
+	{
+		multi.erase(0, 1);
+	}
+	cout << multi << endl;
+	int* ResultMul = new int[multi.length()];
+	element_null(ResultMul, multi.length());
+	convert_str_to_bin(multi, ResultMul);
+	for (int i = 0; i < multi.length(); i++)
+	{
+		cout << ResultMul[i] << "  ";
+	}
+	cout << endl;
+	int shift_gen = multi.length() - expansion;
+	int* ShiftGen = LongShiftBitsToHigh(copyGen, shift_gen, expansion);
+	cout << "Генератор, сдвинутый на " << shift_gen << " ячеек:" << endl;
+	for (int i = 0; i < expansion + shift_gen; i++)
+	{
+		cout << ShiftGen[i] << "  ";
+	}
+	int* Result = new int[multi.length()];
+	element_null(Result, multi.length());
+	mod_generator(ResultMul, copyGen, Result, multi.length(), expansion);
+	/*for (int j = 0; j < multi.length(); j++)
+	{
+		Result[j] = ResultMul[j] - ShiftGen[j];
+	}
+	for (int j = 0; j < multi.length(); j++)
+	{
+		cout<<Result[j]<<"  ";
+	}
+	cout << endl;*/
+	return Result;
 }
 
 int* elevation_to_square(int* vector, int* generator, int* result, int size)
